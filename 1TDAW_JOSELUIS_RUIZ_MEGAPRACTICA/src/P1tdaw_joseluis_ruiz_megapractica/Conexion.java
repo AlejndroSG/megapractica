@@ -17,5 +17,48 @@ public class Conexion {
     }
     
     //MÉTODOS
-    public void select
+    public void select(String str) throws SQLException{
+        //Método que ejecuta una consulta select a partir de un String.
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(str);
+        ResultSetMetaData rsMetaData = rs.getMetaData();
+        int n_columnas = rsMetaData.getColumnCount();
+        
+        while(rs.next()){
+            for(int i = 1; i <= n_columnas; i++){
+                System.out.println(rs.getString(i) + " - ");
+            }
+            System.out.println("");
+        }
+    }
+    
+    public String selectToString(String str) throws SQLException{
+        //Método que ejecuta una consulta select a partir de un String y devuelve el resultado como String.
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(str);
+        ResultSetMetaData rsMetaData = rs.getMetaData();
+        int n_columnas = rsMetaData.getColumnCount();
+        
+        String out = "";
+        
+        while(rs.next()){
+            for (int i = 1; i <= n_columnas; i++) {
+                out += rs.getString(i) + " - ";
+            }
+            out += "\n";
+        }
+        return out;
+    }
+    
+    public void insert(String str) throws SQLException{
+        //Método que ejecuta un insert a partir de un String.
+        Statement st = con.createStatement();
+        System.out.println("Insertando...");
+        st.executeUpdate(str);
+    }
+    
+    public void cierre() throws SQLException{
+        //Método que cierra la conexión con la base de datos.
+        con.close();
+    }
 }
