@@ -25,9 +25,8 @@ public class Main {
             System.out.println("Introduce la contraseña");
             String contr = sc.nextLine();
             consulta1 = "select nameusu, password from usuarioR where password = '" + contr + "' and nameusu = '" + nom_usu + "'";
-            
             c.select(consulta1);
-        }else{
+        }else if(opc == 'N'){
             System.out.println("¿Quiéres registrarte?(S/N)");
             do{
                 opc = sc.next().toUpperCase().charAt(0);
@@ -39,14 +38,12 @@ public class Main {
                 System.out.println("Introduce la contraseña");
                 String contr = sc.nextLine();
                 
-                consulta1 = "select count(*) from usuarioR where password = '" + contr + "' and nameusu = '" + nom_usu + "';";
+                consulta1 = "select count(*) from usuarioR where password = '" + contr + "' and nameusu = '" + nom_usu + "'";
                 Statement st = c.getCon().createStatement();
                 ResultSet rs = st.executeQuery(consulta1);
                 rs.next();
                 int count = rs.getInt(1);
                 System.out.println(count);
-                
-                
                 
                 if(count < 1){
                     System.out.println("Tu cuenta no existe , vamos a crear una!!");
