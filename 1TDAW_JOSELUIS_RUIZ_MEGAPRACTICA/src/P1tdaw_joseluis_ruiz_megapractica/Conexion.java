@@ -26,7 +26,7 @@ public class Conexion {
         
         while(rs.next()){
             for(int i = 1; i <= n_columnas; i++){
-                System.out.println(rs.getString(i) + " - ");
+                System.out.print(rs.getString(i) + " - ");
             }
             System.out.println("");
         }
@@ -60,5 +60,9 @@ public class Conexion {
     public void cierre() throws SQLException{
         //Método que cierra la conexión con la base de datos.
         con.close();
+    }
+    
+    public Connection getCon(){
+        return con;
     }
 }
