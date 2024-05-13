@@ -9,4 +9,7 @@ public class Main {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         Conexion c = new Conexion();
     }   
+    public static void totalRecetas(){
+        
+    }
 }
