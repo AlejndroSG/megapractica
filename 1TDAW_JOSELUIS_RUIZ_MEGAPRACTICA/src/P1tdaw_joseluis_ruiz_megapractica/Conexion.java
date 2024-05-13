@@ -17,5 +17,13 @@ public class Conexion {
     }
     
     //MÉTODOS
-    public void select
+    public ResultSet select(String srt) throws SQLException{
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(srt);
+        return rs;
+    }
+    
+    public void cerrar() throws SQLException{
+        con.close();
+    }
 }
