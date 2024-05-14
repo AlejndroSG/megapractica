@@ -24,8 +24,37 @@ public class Main {
             String nom_usu = sc.nextLine().toLowerCase();
             System.out.println("Introduce la contraseña");
             String contr = sc.nextLine();
-            consulta1 = "select nameusu, password from usuarioR where password = '" + contr + "' and nameusu = '" + nom_usu + "'";
-            c.select(consulta1);
+            Statement st = c.getCon().createStatement();
+            consulta1 = "select count(*) from usuarioR where password = '" + contr + "' and nameusu = '" + nom_usu + "'";
+            ResultSet rs = st.executeQuery(consulta1);
+            rs.next();
+            int num = rs.getInt(1);
+            if(num == 1){
+                System.out.println("Se ha iniciado sesión con éxito");
+                String consulta = "select rol from usuarioR where password = '" + contr + "' and nameusu = '" + nom_usu + "'";
+                rs = st.executeQuery(consulta);
+                rs.next();
+                String rol = rs.getString(1);
+                Usuarios usu = new Usuarios(nom_usu, contr, rol);
+                System.out.println("Usuario creado exitosamente en Java");
+            }else{
+                System.out.println("No existe el usuario, ¿quieres crear uno nuevo?(S/N)");
+                char opcion = sc.next().toUpperCase().charAt(0);
+                if(opcion == 'S'){
+                    sc.nextLine();
+                    System.out.println("Introduce el nombre");
+                    String nom = sc.nextLine();
+                    System.out.println("Introduce el apellido");
+                    String apell = sc.nextLine();
+                    System.out.println("Introduce el correo electrónico");
+                    String corr = sc.nextLine();
+                    String consulta = "insert into usuarioR values ('"+ nom + "', '"+ apell + "', '"+ corr +"', '"+ nom_usu +"', 'usuarioR', '"+ contr +"')";
+                    c.insert(consulta);
+                    Usuarios usu = new Usuarios(nom_usu, contr, "usuarioR");
+                }else{
+                    System.out.println("No has iniciado sesión, por lo que no vas a tener acceso total a la aplicacion");
+                }
+            }
         }else if(opc == 'N'){
             System.out.println("¿Quiéres registrarte?(S/N)");
             do{
@@ -45,7 +74,7 @@ public class Main {
                 int count = rs.getInt(1);
                 System.out.println(count);
                 
-                if(count < 1){
+                if(count == 0){
                     System.out.println("Tu cuenta no existe , vamos a crear una!!");
                     System.out.println("Introduce el nombre");
                     String nom = sc.nextLine();
@@ -53,13 +82,48 @@ public class Main {
                     String apell = sc.nextLine();
                     System.out.println("Introduce el correo electrónico");
                     String corr = sc.nextLine();
-                    String consulta = "insert into usuarioR values ('"+ nom + "', '"+ apell + "', '"+ corr +"', '"+ nom_usu +"', 'usuarioR', '"+ contr +"'";
+                    String consulta = "insert into usuarioR values ('"+ nom + "', '"+ apell + "', '"+ corr +"', '"+ nom_usu +"', 'usuarioR', '"+ contr +"')";
                     c.insert(consulta);
-                }
-                
-                c.cierre();
+                    Usuarios usu = new Usuarios(nom_usu, contr, "usuarioR");
+                }                
+            }else{
+                System.out.println("No has iniciado sesión, por lo que no tendrás acceso total al programa");
             }
         }
+        /*Statement st2 = c.getCon().createStatement();
+        String consulta3;
+        consulta3 = "select count(*) from usuarioR";
+        ResultSet rs2 = st2.executeQuery(consulta3);
+        rs2.next();
+        int n = rs2.getInt(1);
+        
+        String [] usuarios = new String [n];
+
+        String consulta2;
+        consulta2 = "select * from usuarioR";
+        ResultSet rs = st2.executeQuery(consulta2);
+
+        int cont = 0;
+
+        while(rs.next()){
+            usuarios[cont] = rs.getString("nameusu");
+            cont++;
+        }
+        
+        for (int i = 0; i < usuarios.length; i++) {
+            System.out.println(usuarios[i]);
+        }*/
+
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+        
+        c.cierre();
+
     }   
     
     public static void totalRecetas(){
