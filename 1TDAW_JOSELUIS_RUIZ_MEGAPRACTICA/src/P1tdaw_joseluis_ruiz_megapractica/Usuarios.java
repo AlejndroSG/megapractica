@@ -2,6 +2,7 @@ package P1tdaw_joseluis_ruiz_megapractica;
 
 import java.sql.*;
 import java.util.*;
+
 public class Usuarios {
     private String nameusu;
     private String password;

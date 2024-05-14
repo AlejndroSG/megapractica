@@ -3,8 +3,6 @@ package P1tdaw_joseluis_ruiz_megapractica;
 import java.sql.*;
 import java.util.Scanner;
 
-
-
 public class Main {
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
@@ -52,7 +50,7 @@ public class Main {
                     c.insert(consulta);
                     Usuarios usu = new Usuarios(nom_usu, contr, "usuarioR");
                 }else{
-                    System.out.println("No has iniciado sesión, por lo que no vas a tener acceso total a la aplicacion");
+                    System.out.println("No has iniciado sesión, por lo que no tendrás acceso total al programa");
                 }
             }
         }else if(opc == 'N'){
