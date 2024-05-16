@@ -9,8 +9,9 @@ public class Main {
         Scanner sc = new Scanner (System.in);
         Conexion c = new Conexion();
         String consulta1 = "";
-        System.out.println("Bienvenido a recetasPAL");
+        System.out.println("Bienvenido a recetasPANAL");
         System.out.println("¿Estás registrado?(S/N)");
+        Usuarios usu = new Usuarios();
         char opc;
         do{
             opc = sc.next().toUpperCase().charAt(0);
@@ -33,7 +34,7 @@ public class Main {
                 rs = st.executeQuery(consulta);
                 rs.next();
                 String rol = rs.getString(1);
-                Usuarios usu = new Usuarios(nom_usu, contr, rol);
+                usu = new Usuarios(nom_usu, contr, rol);
                 System.out.println("Usuario creado exitosamente en Java");
             }else{
                 System.out.println("No existe el usuario, ¿quieres crear uno nuevo?(S/N)");
@@ -48,7 +49,7 @@ public class Main {
                     String corr = sc.nextLine();
                     String consulta = "insert into usuarioR values ('"+ nom + "', '"+ apell + "', '"+ corr +"', '"+ nom_usu +"', 'usuarioR', '"+ contr +"')";
                     c.insert(consulta);
-                    Usuarios usu = new Usuarios(nom_usu, contr, "usuarioR");
+                    usu = new Usuarios(nom_usu, contr, "usuarioR");
                 }else{
                     System.out.println("No has iniciado sesión, por lo que no tendrás acceso total al programa");
                 }
@@ -82,7 +83,7 @@ public class Main {
                     String corr = sc.nextLine();
                     String consulta = "insert into usuarioR values ('"+ nom + "', '"+ apell + "', '"+ corr +"', '"+ nom_usu +"', 'usuarioR', '"+ contr +"')";
                     c.insert(consulta);
-                    Usuarios usu = new Usuarios(nom_usu, contr, "usuarioR");
+                    usu = new Usuarios(nom_usu, contr, "usuarioR");
                 }                
             }else{
                 System.out.println("No has iniciado sesión, por lo que no tendrás acceso total al programa");
@@ -112,13 +113,81 @@ public class Main {
             System.out.println(usuarios[i]);
         }*/
 
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
+        int num;
+        String opcion;
+        System.out.println(" ");
+        do{
+            do{
+                System.out.println("Entrar a la aplicación (1)");
+                System.out.println("Salir de la aplicación (2)");
+                num = sc.nextInt();
+            }while(num != 1 && num != 2);
+            sc.nextLine();
+            switch(num){
+                case 1:
+                    do{
+                    System.out.println("\nMenú de recetasPANAL");
+                    System.out.println("-----------------------------------------------");
+                    System.out.println("Buscar recetas (BR)");
+                    System.out.println("Ver todas las recetas (VT)");
+                    if(usu.getRol() != null){
+                        System.out.println("Ver Perfil (VP)");
+                        System.out.println("Modificar Perfil (MP)");
+                        System.out.println("Ver mis recetas (VR)");
+                        System.out.println("Añadir recetas (AR)");
+                        if(usu.getRol().equals("admin")){
+                            System.out.println("Modificar recetas (MR)");
+                            System.out.println("Ver todos los usuarios registrados (USUR)");
+                        }
+                    }
+                    System.out.println("Cerrar (C)");
+                    System.out.println("Elige la opcion giipollas");
+                    opcion = sc.nextLine().toUpperCase();
+
+                    switch(opcion){
+                        case "BR": //Esto se hace en la 3ª parte
+                            
+                        break;
+                        case "VT":
+                            Statement st = c.getCon().createStatement();
+                            String consulta;
+                            consulta = "select count(*) from recipe";
+                            ResultSet rs = st.executeQuery(consulta);
+                            rs.next();
+                            int n = rs.getInt(1);
+
+                            String [] recetas = new String [n];
+
+                            String consulta2;
+                            consulta2 = "select * from recipe";
+                            ResultSet rs2 = st.executeQuery(consulta2);
+
+                            int cont = 0;
+                            System.out.println(" ");
+                            while(rs2.next()){
+                                recetas[cont] = rs2.getString("nombreR"); 
+                                cont++;
+                            }
+                            
+                            for (int i = 0; i < recetas.length; i++){
+                                System.out.println(recetas[i]);
+                            }
+                        break;
+                        case "VP":
+                            System.out.println("Datos de tu perfil");
+                            System.out.println("Nombre de usuario: "+usu.getNameusu());
+                            System.out.println("");
+                        break;
+                        case "C":
+                            System.out.println("Saliendo de la app...");
+                            num = 2;
+                        break;
+                    }
+
+                    }while (!opcion.equals("C"));
+                break;
+            }
+        }while(num != 2);
         
         c.cierre();
 
