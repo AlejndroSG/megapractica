@@ -174,6 +174,7 @@ public class Main {
                             }
                         break;
                         case "VP":
+                            consulta = "select * from usuarioR where nomusu = "+usu.getNameusu();
                             System.out.println("Datos de tu perfil");
                             System.out.println("Nombre de usuario: "+usu.getNameusu());
                             System.out.println("");
