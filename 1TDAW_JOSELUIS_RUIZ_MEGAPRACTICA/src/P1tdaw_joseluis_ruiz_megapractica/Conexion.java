@@ -16,6 +16,11 @@ public class Conexion {
         System.out.println("Conexión con ORACLE establecida.\n");
     }
     
+    //GETTER & SETTER
+    public Connection getCon(){
+        return con;
+    }
+    
     //MÉTODOS
     public void select(String str) throws SQLException{
         //Método que ejecuta una consulta select a partir de un String.
@@ -60,9 +65,5 @@ public class Conexion {
     public void cierre() throws SQLException{
         //Método que cierra la conexión con la base de datos.
         con.close();
-    }
-    
-    public Connection getCon(){
-        return con;
     }
 }
