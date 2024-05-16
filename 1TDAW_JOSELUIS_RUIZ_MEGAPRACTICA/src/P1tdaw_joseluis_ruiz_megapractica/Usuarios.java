@@ -9,6 +9,10 @@ public class Usuarios {
     private String rol;
     
     //Constructor
+    public Usuarios(){
+        
+    }
+    
     public Usuarios(String nameusu, String password, String rol) {
         this.nameusu = nameusu;
         this.password = password;
