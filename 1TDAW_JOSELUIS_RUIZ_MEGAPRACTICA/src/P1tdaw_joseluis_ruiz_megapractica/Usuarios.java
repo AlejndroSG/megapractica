@@ -10,7 +10,9 @@ public class Usuarios {
     
     //Constructor
     public Usuarios(){
-        
+        nameusu = "";
+        password = "";
+        rol = "";
     }
     
     public Usuarios(String nameusu, String password, String rol) {
