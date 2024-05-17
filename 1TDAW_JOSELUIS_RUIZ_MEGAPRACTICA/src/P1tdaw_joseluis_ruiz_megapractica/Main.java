@@ -135,9 +135,13 @@ public class Main {
                         System.out.println("Modificar Perfil (MP)");
                         System.out.println("Ver mis recetas (VR)");
                         System.out.println("Añadir recetas (AR)");
+                        if(usu.getRol().equals("usuarioR")){
+                            System.out.println("Borrar mis recetas (BM)");
+                        }
                         if(usu.getRol().equals("admin")){
                             System.out.println("Modificar recetas (MR)");
                             System.out.println("Ver todos los usuarios registrados (USUR)");
+                            System.out.println("Borrar alguna recetas (BAR)");
                         }
                     }
                     System.out.println("Cerrar (C)");
@@ -159,7 +163,7 @@ public class Main {
                             String [] recetas = new String [n];
 
                             String consulta2;
-                            consulta2 = "select * from recipe";
+                            consulta2 = "select * from recipe order by cod";
                             ResultSet rs2 = st.executeQuery(consulta2);
 
                             int cont = 0;
@@ -174,10 +178,89 @@ public class Main {
                             }
                         break;
                         case "VP":
-                            consulta = "select * from usuarioR where nomusu = "+usu.getNameusu();
+                            System.out.println("-------------------------------------------------------------");
+                            System.out.println(" ");
+                            Statement st3 = c.getCon().createStatement();
+                            consulta = "";
+                            consulta = "select nombre from usuarioR where nameusu = '"+usu.getNameusu()+"'";
+                            ResultSet rs4 = st3.executeQuery(consulta);
+                            rs4.next();
+                            String name = rs4.getString(1);
                             System.out.println("Datos de tu perfil");
+                            System.out.println("Nombre: "+name);
+                            consulta = "select apellidos from usuarioR where nameusu = '"+usu.getNameusu()+"'";
+                            rs4 = st3.executeQuery(consulta);
+                            rs4.next();
+                            String apell = rs4.getString(1);
+                            System.out.println("Apellidos: "+apell);
+                            consulta = "select email from usuarioR where nameusu = '"+usu.getNameusu()+"'";
+                            rs4 = st3.executeQuery(consulta);
+                            rs4.next();
+                            String email = rs4.getString(1);
+                            System.out.println("Email: "+email);
                             System.out.println("Nombre de usuario: "+usu.getNameusu());
-                            System.out.println("");
+                            System.out.println("Rol en el sistema: "+usu.getRol());
+                        break;
+                        case "AR":
+                            System.out.println("Dime el nombre de la receta");
+                            String nameR = sc.nextLine();
+                            System.out.println("Describe tu receta");
+                            String descrip = sc.nextLine();
+                            System.out.println("Introduce los ingredientes de tu receta");
+                            String ingred = sc.nextLine();
+                            System.out.println("Introduce los pasos a seguir para hacer la receta");
+                            String pasos = sc.nextLine();
+                            Recetas rec = new Recetas(nameR, descrip, ingred, pasos, usu.getNameusu(), usu.getPassword(), usu.getRol());
+                            String consulta3 = "insert into recipe (nombreR, nameusu, descripcion, ingredientes, instruccionesR) values ('"+nameR+"' , '"+usu.getNameusu()+"' , '"+descrip+"' , '"+ingred+"' , '"+pasos+"')";
+                            c.insert(consulta3);
+                            System.out.println("Insertando receta...");
+                            Statement st4 = c.getCon().createStatement();
+                            String consulta4 = "select cod from recipe where nombreR = '"+nameR+"'";
+                            ResultSet rs5 = st4.executeQuery(consulta4);
+                            rs5.next();
+                            int n1 = rs5.getInt(1);
+                            rec.imprimeTags(n1);
+                        break;
+                        case "BM":
+                            Statement st6 = c.getCon().createStatement();
+                            System.out.println("Tus recetas son: ");
+                            String consulta8 = "select count(*) from recipe where nameusu = '"+usu.getNameusu()+"'";
+                            ResultSet rs8 = st6.executeQuery(consulta8);
+                            rs8.next();
+                            int num_recip = rs8.getInt(1);
+                            String [] recetasUsu = new String [num_recip];
+                            
+                            String consulta7 = "select nombreR from recipe where nameusu = '"+usu.getNameusu()+"'";
+                            ResultSet rs7 = st6.executeQuery(consulta7);
+                            rs7.next();
+                            int count = 0;
+                            while(rs7.next()){
+                                recetasUsu[count] = rs7.getString("nombreR");
+                                count++;
+                            }
+                            
+                            for (int i = 0; i < recetasUsu.length; i++) {
+                                System.out.println((i+1) +" "+ recetasUsu[i]);
+                            }
+                            
+                            System.out.println("Elige cuál quieres borrar");
+                            int opcionn = sc.nextInt();
+                            opcionn -= 1;
+                            System.out.println(recetasUsu[opcionn]);
+                            String recetaB = recetasUsu[opcionn];
+                            String borrarR = "delete from recipe where nombreR = '"+recetaB+"'";
+                            Statement st7 = c.getCon().createStatement();
+                            
+                            ResultSet rs9 = st7.executeQuery(borrarR);
+                            System.out.println("Elminiando receta...");
+                        break;
+                        case "BAR":
+                            Statement st5 = c.getCon().createStatement();
+                            System.out.println("Introduce el nombre de la receta que quieres eliminar");
+                            String nomR = sc.nextLine();
+                            String borrar = "delete from recipe where nombreR = '"+nomR+"'";
+                            ResultSet rs6 = st5.executeQuery(borrar);
+                            System.out.println("Eliminando receta...");
                         break;
                         case "C":
                             System.out.println("Saliendo de la app...");

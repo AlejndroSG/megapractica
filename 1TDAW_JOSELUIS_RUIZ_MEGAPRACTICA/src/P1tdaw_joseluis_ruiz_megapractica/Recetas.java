@@ -56,7 +56,7 @@ public class Recetas extends Usuarios{
     }
     
     //MÉTODOS
-    public void imprimeTags() throws ClassNotFoundException, SQLException{
+    public void imprimeTags(int codR) throws ClassNotFoundException, SQLException{
         Scanner sc = new Scanner (System.in);
         Conexion c = new Conexion();
         Statement st = c.getCon().createStatement();
