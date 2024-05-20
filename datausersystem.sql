@@ -29,7 +29,7 @@ create table recipe
     cod             integer GENERATED ALWAYS AS IDENTITY (Start with 1 increment by 1) primary key,
     nombreR         varchar2(50) unique not null,
     nameusu         varchar2(100) not null,
-    puntuacion      number(2,1) default 0 and check (puntuacion >= 0 and puntuacion <=5),
+    puntuacion      number(2,1) default 0 check (puntuacion >= 0 and puntuacion <=5),
     descripcion     varchar2(100) not null,
     ingredientes    varchar2(500) not null, 
     instruccionesR  varchar2(1000) not null,

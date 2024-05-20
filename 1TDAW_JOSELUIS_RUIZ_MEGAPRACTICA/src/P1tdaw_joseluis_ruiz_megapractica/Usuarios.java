@@ -12,7 +12,7 @@ public class Usuarios {
     public Usuarios(){
         nameusu = "";
         password = "";
-        rol = "";
+        rol = null;
     }
     
     public Usuarios(String nameusu, String password, String rol) {
