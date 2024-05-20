@@ -147,10 +147,56 @@ public class Main {
                     System.out.println("Cerrar (C)");
                     System.out.println("Elige la opcion giipollas");
                     opcion = sc.nextLine().toUpperCase();
-
+                    String opci;
+                    
                     switch(opcion){
                         case "BR": //Esto se hace en la 3ª parte
+                            do{
+                                System.out.println("¿Mediante que método quieres buscar, Nombre de la receta(NR), Etiqueta(E) o Nombre de Usuario(NU)?");
+                                opci = sc.nextLine().toUpperCase();
+                            }while(!opci.equals("NR") && !opci.equals("E") && !opci.equals("NU"));
                             
+                                switch(opci){
+                                    case "NR":
+                                        System.out.println("Introduce el nombre o una palabra clave del nombre de la receta.");
+                                        String palabC = sc.nextLine().toLowerCase();
+                                        
+                                        Statement st20 = c.getCon().createStatement();
+                                        String consulta10 = "select count(*) from recipe where lower(nombreR) like '%" + palabC + "%'";
+                                        ResultSet rs20 = st20.executeQuery(consulta10);
+                                        rs20.next();
+                                        String[] vReTo = new String[rs20.getInt(1)];
+                                        String consulta20 = "select cod, nombreR from recipe where lower(nombreR) like '%" + palabC + "%'";
+                                        ResultSet rs21 = st20.executeQuery(consulta20);
+                                        for(int i = 0; i < vReTo.length; i++) {
+                                            rs21.next();
+                                            vReTo[i] = rs21.getInt(1) + " - " + rs21.getString(2);
+                                            System.out.println(vReTo[i]);
+                                        }                                      
+                                        
+                                        System.out.println("Selecciona el código de la consulta que quieres seleccionar.");
+                                        int selecCod = sc.nextInt();
+                                        
+                                        String consulta22 = "select * from recipe where cod = '" + selecCod + "'";
+                                        ResultSet rs22 = st20.executeQuery(consulta22);
+                                        rs22.next();
+                                        
+                                        System.out.println("");
+                                        System.out.println("Código: "+rs22.getInt(1));
+                                        System.out.println("Nombre de la receta: "+rs22.getString(2));
+                                        System.out.println("Nombre del usuario: "+rs22.getString(3));
+                                        System.out.println("Puntuación de la receta: "+rs22.getInt(4));
+                                        System.out.println("Descripción de la receta: "+rs22.getString(5));
+                                        System.out.println("Ingredientes: "+rs22.getString(6));
+                                        System.out.println("Instrucciones: "+rs22.getString(7));
+                                        
+                                        sc.nextLine();
+                                    break;
+                                    case "E":
+                                    break;
+                                    case "NU":
+                                    break;
+                                }
                         break;
                         case "VT":
                             Statement st = c.getCon().createStatement();
@@ -210,7 +256,12 @@ public class Main {
                             String ingred = sc.nextLine();
                             System.out.println("Introduce los pasos a seguir para hacer la receta");
                             String pasos = sc.nextLine();
-                            Recetas rec = new Recetas(nameR, descrip, ingred, pasos, usu.getNameusu(), usu.getPassword(), usu.getRol());
+                            System.out.println("¿Qué puntuación le darías a tu receta? (0/5)");
+                            float punt;
+                            do{
+                                punt = sc.nextFloat();
+                            }while(punt < 0 || punt > 5);
+                            Recetas rec = new Recetas(nameR, punt, descrip, ingred, pasos, usu.getNameusu(), usu.getPassword(), usu.getRol());
                             String consulta3 = "insert into recipe (nombreR, nameusu, descripcion, ingredientes, instruccionesR) values ('"+nameR+"' , '"+usu.getNameusu()+"' , '"+descrip+"' , '"+ingred+"' , '"+pasos+"')";
                             c.insert(consulta3);
                             System.out.println("Insertando receta...");
