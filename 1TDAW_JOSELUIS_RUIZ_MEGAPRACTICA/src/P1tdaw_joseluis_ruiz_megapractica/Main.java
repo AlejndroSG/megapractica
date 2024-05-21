@@ -331,6 +331,43 @@ public class Main {
                             System.out.println("Nombre de usuario: "+usu.getNameusu());
                             System.out.println("Rol en el sistema: "+usu.getRol());
                         break;
+                        case "MP":
+                            System.out.println("Indica qué quieres modificar de tu perfil (nombre, apellidos, email, nombre de usuario)");
+                            String opcin = sc.nextLine();
+                            String cambio = "";
+                            String columna = "";
+                            Statement st12 = c.getCon().createStatement();
+                            consulta = "select * from usuarioR where nameusu = '"+usu.getNameusu()+"'";
+                            ResultSet rs13 = st12.executeQuery(consulta);
+                            rs13.next();
+                            
+                            
+                            if(opcin.equals("nombre")){
+                                System.out.println("Introduce tu nuevo nombre");
+                                cambio = sc.nextLine().toLowerCase();
+                                columna = rs13.getMetaData().getColumnName(1).toLowerCase();
+                            }
+                            if(opcin.equals("apellidos")){
+                                System.out.println("Introduce tu nuevo apellido");
+                                cambio = sc.nextLine().toLowerCase();
+                                columna = rs13.getMetaData().getColumnName(2);
+                            }
+                            if(opcin.equals("email")){
+                                System.out.println("Introduce tu nuevo email");
+                                cambio = sc.nextLine().toLowerCase();
+                                columna = rs13.getMetaData().getColumnName(3);
+                            }
+                            if(opcin.equals("nombre de usuario")){
+                                System.out.println("Introduce tu nuevo apellido");
+                                cambio = sc.nextLine().toLowerCase();
+                                columna = rs13.getMetaData().getColumnName(4);
+                            }
+                            
+                            String consulta6 = "update usuarioR set "+columna+" = '"+cambio+"' where nameusu = '"+usu.getNameusu()+"'";
+                            if(st12.executeUpdate(consulta6)!=0);
+                                System.out.println("Modificación correcta");
+                                
+                        break;
                         case "VR":
                             System.out.println("Tus recetas son: ");
                             Statement st8 = c.getCon().createStatement();
@@ -352,7 +389,6 @@ public class Main {
                                 System.out.println(rs11.getInt(1) + ".- "+ rs11.getString(2));
                             }
 
-                            
                             int numm = -10;
                             do{
                                 System.out.println("\nIntroduce cuál de las tres quieres ver la información, o pon 0 si quieres salir del programa");
@@ -390,7 +426,7 @@ public class Main {
                                 punt = sc.nextFloat();
                             }while(punt < 0 || punt > 5);
                             Recetas rec = new Recetas(nameR, punt, descrip, ingred, pasos, usu.getNameusu(), usu.getPassword(), usu.getRol());
-                            String consulta3 = "insert into recipe (nombreR, nameusu, puntuacion, descripcion, ingredientes, instruccionesR) values ('"+nameR+"' , '"+usu.getNameusu()+"' , '"+punt+"' , '"+descrip+"' , '"+ingred+"' , '"+pasos+"')";
+                            String consulta3 = "insert into recipe (nombreR, nameusu, puntuacion, descripcion, ingredientes, instruccionesR) values ('"+nameR+"' , '"+usu.getNameusu()+"' , "+punt+" , '"+descrip+"' , '"+ingred+"' , '"+pasos+"')";
                             c.insert(consulta3);
                             System.out.println("Insertando receta...");
                             Statement st4 = c.getCon().createStatement();
