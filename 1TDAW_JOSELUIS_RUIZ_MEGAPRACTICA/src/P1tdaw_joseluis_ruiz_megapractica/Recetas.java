@@ -59,7 +59,7 @@ public class Recetas extends Usuarios{
     }
     
     //MÉTODOS
-    public void imprimeTags(int codR) throws ClassNotFoundException, SQLException{
+    public void imprimeTags() throws ClassNotFoundException, SQLException{
         Scanner sc = new Scanner (System.in);
         Conexion c = new Conexion();
         Statement st = c.getCon().createStatement();
@@ -78,35 +78,6 @@ public class Recetas extends Usuarios{
             System.out.println((i+1) + " " + tags[i]);
             rs2.next();
         }
-        
-        int opc;
-        do{
-            System.out.println("Introduce la posición de las etiquetas que quieres asignar a tu receta, si quieres añadir una nueva introduce (0), si quieres salir introduce (-1).");
-            opc = sc.nextInt(); 
-
-            String nomT = "";
-            if(opc == 0){
-                do{
-                    sc.nextLine();
-                    System.out.println("Introduce el nombre de la nueva etiqueta, si no quieres introducir otra introduce (0).");
-                    nomT = sc.nextLine();
-                    if(!nomT.equals("0")){
-                        Statement st2 = c.getCon().createStatement();
-                     
-                        String consulta2 = "insert into tags (nom) values ('" + nomT + "')";
-                        c.insert(consulta2);
-                        String consulta3 = "select id from tags where nom = '" + nomT + "'";
-                        ResultSet rs3 = st2.executeQuery(consulta3);
-                        rs3.next();
-                        int codT = rs3.getInt(1);
-                        System.out.println("Su etiqueta ha sido asignada con éxito!");
-                        crearUnion(c, codT, codR);
-                    }
-                }while(!nomT.equals("0"));
-            }else if(opc == -1){
-            
-            }
-        }while(opc != -1);
     }
     
     public void crearUnion(Conexion c, int codT, int codR) throws ClassNotFoundException, SQLException{

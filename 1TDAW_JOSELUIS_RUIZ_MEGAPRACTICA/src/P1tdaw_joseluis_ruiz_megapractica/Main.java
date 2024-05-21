@@ -112,7 +112,8 @@ public class Main {
         for (int i = 0; i < usuarios.length; i++) {
             System.out.println(usuarios[i]);
         }*/
-
+        Recetas r = new Recetas();
+        int selecCod;
         int num;
         String opcion;
         System.out.println(" ");
@@ -148,12 +149,15 @@ public class Main {
                     System.out.println("Elige la opcion giipollas");
                     opcion = sc.nextLine().toUpperCase();
                     String opci;
+                    int opcn;
+                    int[] codE;
                     
                     switch(opcion){
                         case "BR": //Esto se hace en la 3ª parte
                             do{
                                 System.out.println("¿Mediante que método quieres buscar, Nombre de la receta(NR), Etiqueta(E) o Nombre de Usuario(NU)?");
                                 opci = sc.nextLine().toUpperCase();
+                                System.out.println("");
                             }while(!opci.equals("NR") && !opci.equals("E") && !opci.equals("NU"));
                             
                                 switch(opci){
@@ -174,8 +178,8 @@ public class Main {
                                             System.out.println(vReTo[i]);
                                         }                                      
                                         
-                                        System.out.println("Selecciona el código de la consulta que quieres seleccionar.");
-                                        int selecCod = sc.nextInt();
+                                        System.out.println("Selecciona el código de la receta que quieres seleccionar.");
+                                        selecCod = sc.nextInt();
                                         
                                         String consulta22 = "select * from recipe where cod = '" + selecCod + "'";
                                         ResultSet rs22 = st20.executeQuery(consulta22);
@@ -193,8 +197,97 @@ public class Main {
                                         sc.nextLine();
                                     break;
                                     case "E":
+                                        Statement st21 = c.getCon().createStatement();
+                                        r.imprimeTags();
+                                        
+                                        System.out.println("");
+                                        int contt = 0;
+                                        do{
+                                            System.out.println("Introduce el código de la etiqueta que quieres buscar, si no quieres buscar ninguna más introduce (-1)");
+                                            opcn = sc.nextInt();
+                                            contt++;
+                                            codE = new int[contt];
+                                            codE[contt - 1] = opcn;
+                                        }while(opcn != -1);
+                                        
+                                        for (int i = 0; i < codE.length; i++) {
+                                            
+                                        }
+                                        
+                                        System.out.println("");
+                                        String consulta23 = "select count(*) from recipe, tags, uniones where recipe.cod = uniones.cod and tags.id = uniones.id and tags.id = '" + opcn + "'";
+                                        ResultSet rs23 = st21.executeQuery(consulta23);
+                                        rs23.next();
+                                        String[] vReEt = new String[rs23.getInt(1)];
+                                        String consulta24 = "select recipe.cod, nombreR from recipe, tags, uniones where recipe.cod = uniones.cod and tags.id = uniones.id and tags.id = '" + opcn + "'";
+                                        ResultSet rs24 = st21.executeQuery(consulta24);
+                                        for(int i = 0; i < vReEt.length; i++) {
+                                            rs24.next();
+                                            vReEt[i] = rs24.getInt(1) + " - " + rs24.getString(2);
+                                            System.out.println(vReEt[i]);
+                                        }
+                                        
+                                        System.out.println("");
+                                        System.out.println("Selecciona el código de la receta que quieres seleccionar.");
+                                        selecCod = sc.nextInt();
+                                        
+                                        String consulta25 = "select * from recipe where cod = '" + selecCod + "'";
+                                        ResultSet rs25 = st21.executeQuery(consulta25);
+                                        rs25.next();
+                                        
+                                        System.out.println("");
+                                        System.out.println("Código: "+rs25.getInt(1));
+                                        System.out.println("Nombre de la receta: "+rs25.getString(2));
+                                        System.out.println("Nombre del usuario: "+rs25.getString(3));
+                                        System.out.println("Puntuación de la receta: "+rs25.getInt(4));
+                                        System.out.println("Descripción de la receta: "+rs25.getString(5));
+                                        System.out.println("Ingredientes: "+rs25.getString(6));
+                                        System.out.println("Instrucciones: "+rs25.getString(7));
+                                        
+                                        sc.nextLine();
                                     break;
                                     case "NU":
+                                        Statement st22 = c.getCon().createStatement();
+                                        
+                                        System.out.println("Introduce el usuario del que quieres buscar sus recetas.");
+                                        String usuR = sc.nextLine();
+                                        System.out.println(""); 
+                                        
+                                        String consulta26 = "select count(*) from recipe where nameusu = '" + usuR + "'";
+                                        ResultSet rs26 = st22.executeQuery(consulta26);
+                                        rs26.next();
+                                        
+                                        if(rs26.getInt(1) == 0){
+                                            System.out.println("No hay resultados disponibles.");
+                                        }else{
+                                            String[] vReUs = new String[rs26.getInt(1)];
+                                            String consulta27 = "select recipe.cod, nombreR from recipe where nameusu = '" + usuR + "'";
+                                            ResultSet rs27 = st22.executeQuery(consulta27);
+                                            for(int i = 0; i < vReUs.length; i++) {
+                                                rs27.next();
+                                                vReUs[i] = rs27.getInt(1) + " - " + rs27.getString(2);
+                                                System.out.println(vReUs[i]);
+                                            }
+
+                                            System.out.println("");
+                                            System.out.println("Selecciona el código de la receta que quieres seleccionar.");
+                                            selecCod = sc.nextInt();
+
+                                            String consulta28 = "select * from recipe where cod = '" + selecCod + "'";
+                                            ResultSet rs28 = st22.executeQuery(consulta28);
+                                            rs28.next();
+
+                                            System.out.println("");
+                                            System.out.println("Código: "+rs28.getInt(1));
+                                            System.out.println("Nombre de la receta: "+rs28.getString(2));
+                                            System.out.println("Nombre del usuario: "+rs28.getString(3));
+                                            System.out.println("Puntuación de la receta: "+rs28.getInt(4));
+                                            System.out.println("Descripción de la receta: "+rs28.getString(5));
+                                            System.out.println("Ingredientes: "+rs28.getString(6));
+                                            System.out.println("Instrucciones: "+rs28.getString(7));
+
+                                            sc.nextLine();
+                                        }
                                     break;
                                 }
                         break;
@@ -305,7 +398,36 @@ public class Main {
                             ResultSet rs5 = st4.executeQuery(consulta4);
                             rs5.next();
                             int n1 = rs5.getInt(1);
-                            rec.imprimeTags(n1);
+                            rec.imprimeTags();
+                            
+                            int opcii;
+                            do{
+                                System.out.println("Introduce la posición de las etiquetas que quieres asignar a tu receta, si quieres añadir una nueva introduce (0), si quieres salir introduce (-1).");
+                                opcii = sc.nextInt(); 
+
+                                String nomT = "";
+                                if(opcii == 0){
+                                    do{
+                                        sc.nextLine();
+                                        System.out.println("Introduce el nombre de la nueva etiqueta, si no quieres introducir otra introduce (0).");
+                                        nomT = sc.nextLine();
+                                        if(!nomT.equals("0")){
+                                            Statement st25 = c.getCon().createStatement();
+
+                                            String consulta25 = "insert into tags (nom) values ('" + nomT + "')";
+                                            c.insert(consulta25);
+                                            String consulta26 = "select id from tags where nom = '" + nomT + "'";
+                                            ResultSet rs25 = st25.executeQuery(consulta3);
+                                            rs25.next();
+                                            int codT = rs25.getInt(1);
+                                            System.out.println("Su etiqueta ha sido asignada con éxito!");
+                                            rec.crearUnion(c, codT, n1);
+                                        }
+                                    }while(!nomT.equals("0"));
+                                }else if(opc == -1){
+
+                                }
+                            }while(opc != -1);
                                                         
                         break;
                         case "BM":
