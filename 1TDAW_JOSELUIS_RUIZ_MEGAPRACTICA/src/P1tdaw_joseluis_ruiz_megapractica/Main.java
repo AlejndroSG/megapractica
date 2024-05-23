@@ -520,39 +520,86 @@ public class Main {
                         break;
                         case "MR": //Aquí está con modificar perfil, tengo que hacerlo pero con las recetas
                             if(usu.getRol() != null){
-                                System.out.println("Indica qué quieres modificar de tu perfil (nombre, apellidos, email, nombre de usuario)");
-                                String opcin = sc.nextLine().toLowerCase();
+                                Statement st = c.getCon().createStatement();
+                                
                                 String cambio = "";
                                 String columna = "";
+                                
+                                consulta = "select count(*) from recipe";
+                                ResultSet rs = st.executeQuery(consulta);
+                                rs.next();
+                                int n = rs.getInt(1);
+
+                                String [] recetas = new String [n];
+
+                                String consulta2;
+                                consulta2 = "select * from recipe order by cod";
+                                ResultSet rs2 = st.executeQuery(consulta2);
+
+                                cont = 0;
+                                System.out.println(" ");
+                                while(rs2.next()){
+                                    recetas[cont] = rs2.getString("nombreR"); 
+                                    cont++;
+                                }
+
+                                for (int i = 0; i < recetas.length; i++){
+                                    System.out.println((i+1)+" - "+recetas[i]);
+                                }
+                                
+                                System.out.println("Indica qué receta quieres modificar");
+                                int op = sc.nextInt();
+                                op -= 1;
+                                
                                 Statement st12 = c.getCon().createStatement();
-                                consulta = "select * from usuarioR where nameusu = '"+usu.getNameusu()+"'";
+                                consulta = "select * from recipe where nombreR = '"+recetas[op]+"'";
                                 ResultSet rs13 = st12.executeQuery(consulta);
                                 rs13.next();
 
-
-                                if(opcin.equals("nombre")){
-                                    System.out.println("Introduce tu nuevo nombre");
+                                System.out.println("Nombre de la receta: "+rs13.getString(2));
+                                System.out.println("Nombre del usuario: "+rs13.getString(3));
+                                System.out.println("Puntuación de la receta: "+rs13.getInt(4));
+                                System.out.println("Descripción de la receta: "+rs13.getString(5));
+                                System.out.println("Ingredientes: "+rs13.getString(6));
+                                System.out.println("Instrucciones: "+rs13.getString(7));
+                                
+                                sc.nextLine();
+                                System.out.println("Introduce qué característica quiéres modificar (nombre receta, nombre usuario, puntuacion, descripcion, ingredientes, instrucciones)");
+                                String opp = sc.nextLine();
+                                
+                                if(opp.equals("nombre receta")){
+                                    System.out.println("Introduce el nuevo nombre de receta");
                                     cambio = sc.nextLine();
-                                    columna = rs13.getMetaData().getColumnName(1).toLowerCase();
+                                    columna = rs13.getMetaData().getColumnName(2).toLowerCase();
                                 }
-                                if(opcin.equals("apellidos")){
-                                    System.out.println("Introduce tu nuevo apellido");
-                                    cambio = sc.nextLine();
-                                    columna = rs13.getMetaData().getColumnName(2);
-                                }
-                                if(opcin.equals("email")){
-                                    System.out.println("Introduce tu nuevo email");
+                                if(opp.equals("nombre usuario")){
+                                    System.out.println("Introduce el nuevo nombre de usuario");
                                     cambio = sc.nextLine().toLowerCase();
-                                    columna = rs13.getMetaData().getColumnName(3);
+                                    columna = rs13.getMetaData().getColumnName(3).toLowerCase();
                                 }
-                                if(opcin.equals("nombre de usuario")){
-                                    System.out.println("Introduce tu nuevo nombre de usuario");
+                                if(opp.equals("puntuacion")){
+                                    System.out.println("Introduce la nueva puntación");
                                     cambio = sc.nextLine().toLowerCase();
-                                    columna = rs13.getMetaData().getColumnName(4);
+                                    columna = rs13.getMetaData().getColumnName(4).toLowerCase();
+                                }
+                                if(opp.equals("descripcion")){
+                                    System.out.println("Introduce la nueva descripción");
+                                    cambio = sc.nextLine().toLowerCase();
+                                    columna = rs13.getMetaData().getColumnName(5).toLowerCase();
+                                }
+                                if(opp.equals("ingredientes")){
+                                    System.out.println("Introduce los nuevos ingredientes");
+                                    cambio = sc.nextLine().toLowerCase();
+                                    columna = rs13.getMetaData().getColumnName(6).toLowerCase();
+                                }
+                                if(opp.equals("instrucciones")){
+                                    System.out.println("Introduce las nuevas instrucciones");
+                                    cambio = sc.nextLine().toLowerCase();
+                                    columna = rs13.getMetaData().getColumnName(7).toLowerCase();
                                 }
 
-                                String consulta6 = "update usuarioR set "+columna+" = '"+cambio+"' where nameusu = '"+usu.getNameusu()+"'";
-                                if(st12.executeUpdate(consulta6)!=0);
+                                String consulta6 = "update recipe set "+columna+" = '"+cambio+"' where cod = '"+rs13.getInt(1)+"'";
+                                if(st12.executeUpdate(consulta6)!=0)
                                     System.out.println("Modificación correcta");
                             }
                         break;
@@ -595,6 +642,7 @@ public class Main {
                                     System.out.println("Elminiando receta...");
                                 }
                             }
+                            sc.nextLine();
                         break;
                         case "C":
                             System.out.println("Saliendo de la app...");
