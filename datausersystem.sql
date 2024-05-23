@@ -111,4 +111,3 @@ insert into uniones values (10, 6);
 insert into uniones values (10, 15);
 
 commit;
-

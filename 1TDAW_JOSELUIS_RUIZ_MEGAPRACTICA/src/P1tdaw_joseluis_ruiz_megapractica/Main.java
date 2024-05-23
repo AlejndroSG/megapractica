@@ -150,7 +150,7 @@ public class Main {
                     opcion = sc.nextLine().toUpperCase();
                     String opci;
                     int opcn;
-                    int[] codE;
+                    int[] codE = new int[1000];
                     
                     switch(opcion){
                         case "BR": //Esto se hace en la 3ª parte
@@ -205,44 +205,77 @@ public class Main {
                                         do{
                                             System.out.println("Introduce el código de la etiqueta que quieres buscar, si no quieres buscar ninguna más introduce (-1)");
                                             opcn = sc.nextInt();
-                                            contt++;
-                                            codE = new int[contt];
-                                            codE[contt - 1] = opcn;
+                                            
+                                            String consulta23 = "select count(*) from recipe, tags, uniones where recipe.cod = uniones.cod and tags.id = uniones.id and tags.id = '" + opcn + "'";
+                                            ResultSet rs23 = st21.executeQuery(consulta23);
+                                            rs23.next();
+                                            
+                                            if(rs23.getInt(1) == 0){
+                                                System.out.println("La receta con código " + opcn + " no existe.");
+                                                System.out.println("");
+                                            }else{
+                                                codE[contt] = opcn;
+                                                contt++;
+                                            }
                                         }while(opcn != -1);
                                         
-                                        for (int i = 0; i < codE.length; i++) {
-                                            
+                                        int[] codEAux = new int[contt];
+                                        codEAux = copiarArray(codE, codEAux);
+                                        
+                                        String consultaaa = "select count(*) from uniones where uniones.id = ";
+                                        String consultaa = "select recipe.cod, nombreR from recipe, uniones where recipe.cod = uniones.cod and recipe.cod = ";
+                                        String inter = "intersect";
+                                        String consulta24 = "";
+                                        String consulta25 = "";
+                                        
+                                        for(int i = 0; i < codEAux.length; i++){
+                                            if(i != contt-1){
+                                                consulta24 += consultaaa + codEAux[i] + " " + inter + " ";
+                                            }else{
+                                                consulta24 += consultaaa + codEAux[i];
+                                            }
                                         }
                                         
-                                        System.out.println("");
-                                        String consulta23 = "select count(*) from recipe, tags, uniones where recipe.cod = uniones.cod and tags.id = uniones.id and tags.id = '" + opcn + "'";
-                                        ResultSet rs23 = st21.executeQuery(consulta23);
-                                        rs23.next();
-                                        String[] vReEt = new String[rs23.getInt(1)];
-                                        String consulta24 = "select recipe.cod, nombreR from recipe, tags, uniones where recipe.cod = uniones.cod and tags.id = uniones.id and tags.id = '" + opcn + "'";
                                         ResultSet rs24 = st21.executeQuery(consulta24);
-                                        for(int i = 0; i < vReEt.length; i++) {
-                                            rs24.next();
-                                            vReEt[i] = rs24.getInt(1) + " - " + rs24.getString(2);
-                                            System.out.println(vReEt[i]);
-                                        }
+                                        rs24.next();
                                         
-                                        System.out.println("");
+                                        if(rs24.getInt(1) == 0 && contt == 1){
+                                            System.out.println("No hay ninguna receta que tenga esta etiqueta.");
+                                        }else if(rs24.getInt(1) == 0 && contt != 1){
+                                            System.out.println("No hay ninguna receta que tenga todas estas etiquetas.");
+                                        }else{
+                                            for(int i = 0; i < codEAux.length; i++){
+                                                if(i != contt-1){
+                                                    consulta25 += consultaa + codEAux[i] + " " + inter + " ";
+                                                }else{
+                                                    consulta25 += consultaa + codEAux[i];
+                                                }
+                                            }
+                                        }
+                               
+                                        String[] vReEt = new String[rs24.getInt(1)];
+                                        ResultSet rs25 = st21.executeQuery(consulta25);
+                                        for(int i = 0; i < vReEt.length; i++) {
+                                            vReEt[i] = rs25.getInt(1) + " - " + rs25.getString(2);
+                                            System.out.println(vReEt[i]);
+                                            rs25.next();
+                                        } 
+                                        
                                         System.out.println("Selecciona el código de la receta que quieres seleccionar.");
                                         selecCod = sc.nextInt();
                                         
-                                        String consulta25 = "select * from recipe where cod = '" + selecCod + "'";
-                                        ResultSet rs25 = st21.executeQuery(consulta25);
-                                        rs25.next();
+                                        String consulta29 = "select * from recipe where cod = '" + selecCod + "'";
+                                        ResultSet rs29 = st21.executeQuery(consulta29);
+                                        rs29.next();
                                         
                                         System.out.println("");
-                                        System.out.println("Código: "+rs25.getInt(1));
-                                        System.out.println("Nombre de la receta: "+rs25.getString(2));
-                                        System.out.println("Nombre del usuario: "+rs25.getString(3));
-                                        System.out.println("Puntuación de la receta: "+rs25.getInt(4));
-                                        System.out.println("Descripción de la receta: "+rs25.getString(5));
-                                        System.out.println("Ingredientes: "+rs25.getString(6));
-                                        System.out.println("Instrucciones: "+rs25.getString(7));
+                                        System.out.println("Código: "+rs29.getInt(1));
+                                        System.out.println("Nombre de la receta: "+rs29.getString(2));
+                                        System.out.println("Nombre del usuario: "+rs29.getString(3));
+                                        System.out.println("Puntuación de la receta: "+rs29.getInt(4));
+                                        System.out.println("Descripción de la receta: "+rs29.getString(5));
+                                        System.out.println("Ingredientes: "+rs29.getString(6));
+                                        System.out.println("Instrucciones: "+rs29.getString(7));
                                         
                                         sc.nextLine();
                                     break;
@@ -460,10 +493,8 @@ public class Main {
                                             rec.crearUnion(c, codT, n1);
                                         }
                                     }while(!nomT.equals("0"));
-                                }else if(opc == -1){
-
                                 }
-                            }while(opc != -1);
+                            }while(opcii != -1);
                                                         
                         break;
                         case "BM":
@@ -522,7 +553,11 @@ public class Main {
 
     }   
     
-    public static void totalRecetas(){
+    public static int[] copiarArray(int[] codE, int[] codEAux) throws ClassNotFoundException, SQLException{     
+        for(int i = 0; i < codEAux.length; i++){
+            codEAux[i] = codE[i];
+        }
         
+        return codEAux;
     }
 }
