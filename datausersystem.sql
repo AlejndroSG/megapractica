@@ -111,3 +111,23 @@ insert into uniones values (10, 6);
 insert into uniones values (10, 15);
 
 commit;
+
+select count(*) from recipe where cod in (
+select cod from uniones where id = 1
+
+intersect 
+
+select cod from uniones where id = 2
+
+intersect 
+
+select cod from uniones where id = 3
+);
+
+
+select count(*) from recipe where cod in (
+select distinct cod from uniones where id = 3
+
+intersect
+
+select distinct cod from uniones where id = 5);

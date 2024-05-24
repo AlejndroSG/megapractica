@@ -215,10 +215,7 @@ public class Main {
                                                 ResultSet rs23 = st21.executeQuery(consulta23);
                                                 rs23.next();
 
-                                                if(rs23.getInt(1) == 0){
-                                                    System.out.println("La receta con código " + opcn + " no existe.");
-                                                    System.out.println("");
-                                                }else{
+                                                if(rs23.getInt(1) != 0){
                                                     codE[contt] = opcn;
                                                     contt++;
                                                 }
@@ -228,15 +225,16 @@ public class Main {
                                         int[] codEAux = new int[contt];
                                         codEAux = copiarArray(codE, codEAux);
                                         
-                                        String consultaaa = "select count(*) from uniones where uniones.id = ";
+                                        String consultaaa = "select count(*) from uniones where id = ";
+                                        String idU = " and id = ";
                                         String consultaa = "select recipe.cod, nombreR from recipe, uniones where recipe.cod = uniones.cod and uniones.id = ";
-                                        String inter = "intersect";
+                                        String inter = " intersect ";
                                         String consulta24 = "";
                                         String consulta25 = "";
                                         
                                         for(int i = 0; i < codEAux.length; i++){
                                             if(i != contt-1){
-                                                consulta24 += consultaaa + codEAux[i] + " " + inter + " ";
+                                                consulta24 += consultaaa + codEAux[i] + inter;
                                             }else{
                                                 consulta24 += consultaaa + codEAux[i];
                                             }
@@ -245,10 +243,8 @@ public class Main {
                                         ResultSet rs24 = st21.executeQuery(consulta24);
                                         rs24.next();
                                         
-                                        if(rs24.getInt(1) == 0 && contt == 1){
+                                        if(rs24.getInt(1) == 0){
                                             System.out.println("No hay ninguna receta que tenga esta etiqueta.");
-                                        }else if(rs24.getInt(1) == 0 && contt != 1){
-                                            System.out.println("No hay ninguna receta que tenga todas estas etiquetas.");
                                         }else{
                                             for(int i = 0; i < codEAux.length; i++){
                                                 if(i != contt-1){
@@ -258,29 +254,30 @@ public class Main {
                                                 }
                                             }
                                         }
-                                        
-                                        ResultSet rs25 = st21.executeQuery(consulta25);
-                                        
-                                        while(rs25.next()){
-                                            System.out.println(rs25.getInt(1) + " - " + rs25.getString(2));
+
+                                        if(rs24.getInt(1) != 0){
+                                            ResultSet rs25 = st21.executeQuery(consulta25);
+                                            while(rs25.next()){
+                                                System.out.println(rs25.getInt(1) + " - " + rs25.getString(2));
+                                            }
+
+                                            System.out.println("");
+                                            System.out.println("Selecciona el código de la receta que quieres seleccionar.");
+                                            selecCod = sc.nextInt();
+
+                                            String consulta29 = "select * from recipe where cod = '" + selecCod + "'";
+                                            ResultSet rs29 = st21.executeQuery(consulta29);
+                                            rs29.next();
+
+                                            System.out.println("");
+                                            System.out.println("Código: "+rs29.getInt(1));
+                                            System.out.println("Nombre de la receta: "+rs29.getString(2));
+                                            System.out.println("Nombre del usuario: "+rs29.getString(3));
+                                            System.out.println("Puntuación de la receta: "+rs29.getInt(4));
+                                            System.out.println("Descripción de la receta: "+rs29.getString(5));
+                                            System.out.println("Ingredientes: "+rs29.getString(6));
+                                            System.out.println("Instrucciones: "+rs29.getString(7));
                                         }
-                                        
-                                        System.out.println("");
-                                        System.out.println("Selecciona el código de la receta que quieres seleccionar.");
-                                        selecCod = sc.nextInt();
-                                        
-                                        String consulta29 = "select * from recipe where cod = '" + selecCod + "'";
-                                        ResultSet rs29 = st21.executeQuery(consulta29);
-                                        rs29.next();
-                                        
-                                        System.out.println("");
-                                        System.out.println("Código: "+rs29.getInt(1));
-                                        System.out.println("Nombre de la receta: "+rs29.getString(2));
-                                        System.out.println("Nombre del usuario: "+rs29.getString(3));
-                                        System.out.println("Puntuación de la receta: "+rs29.getInt(4));
-                                        System.out.println("Descripción de la receta: "+rs29.getString(5));
-                                        System.out.println("Ingredientes: "+rs29.getString(6));
-                                        System.out.println("Instrucciones: "+rs29.getString(7));
                                         
                                         sc.nextLine();
                                     break;
@@ -634,6 +631,30 @@ public class Main {
                                     System.out.println("Modificación correcta");
                             }
                         break;
+                        case "USUR":
+                            Statement st30 = c.getCon().createStatement();
+                            String coonsuultaa = "select count(*) from usuarioR";
+                            ResultSet rs30 = st30.executeQuery(coonsuultaa);
+                            rs30.next();
+                            int nummm = rs30.getInt(1);
+                            
+                            String [] usuariosT = new String[nummm];
+                            
+                            String consuulta = "select nombre, apellidos, email, nameusu, rol from usuarioR";
+                            ResultSet rs31 = st30.executeQuery(consuulta);
+                            
+                            int conttt = 0;
+                            while(rs31.next()){
+                                usuariosT[conttt] = "Nombre: "+rs31.getString(1)+" || Apellidos: "+rs31.getString(2)+" || Email: "+rs31.getString(3)+" || Nombre Usuario: "+rs31.getString(4)+" || Rol: "+rs31.getString(5);
+                                conttt++;
+                            }
+                            System.out.println(" ");
+                            System.out.println("Todos los usuarios del sistema son: ");
+                            for (int i = 0; i < usuariosT.length; i++) {
+                                System.out.println(usuariosT[i]);
+                            }
+                            
+                        break;    
                         case "BAR":
                             if(usu.getRol() != null){
                                 Statement st = c.getCon().createStatement();
