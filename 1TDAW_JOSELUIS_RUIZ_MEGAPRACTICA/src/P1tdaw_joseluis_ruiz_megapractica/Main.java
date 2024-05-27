@@ -328,30 +328,28 @@ public class Main {
                             
                         break;
                         case "VT":
-                            if(usu.getRol() != null){
-                                Statement st = c.getCon().createStatement();
-                                
-                                consulta = "select count(*) from recipe";
-                                ResultSet rs = st.executeQuery(consulta);
-                                rs.next();
-                                int n = rs.getInt(1);
+                            Statement st = c.getCon().createStatement();
 
-                                String [] recetas = new String [n];
+                            consulta = "select count(*) from recipe";
+                            ResultSet rs = st.executeQuery(consulta);
+                            rs.next();
+                            int n = rs.getInt(1);
 
-                                String consulta2;
-                                consulta2 = "select * from recipe order by cod";
-                                ResultSet rs2 = st.executeQuery(consulta2);
+                            String [] recetas = new String [n];
 
-                                cont = 0;
-                                System.out.println(" ");
-                                while(rs2.next()){
-                                    recetas[cont] = rs2.getString("nombreR"); 
-                                    cont++;
-                                }
+                            String consulta2;
+                            consulta2 = "select * from recipe order by cod";
+                            ResultSet rs2 = st.executeQuery(consulta2);
 
-                                for (int i = 0; i < recetas.length; i++){
-                                    System.out.println(recetas[i]);
-                                }
+                            cont = 0;
+                            System.out.println(" ");
+                            while(rs2.next()){
+                                recetas[cont] = rs2.getString("nombreR"); 
+                                cont++;
+                            }
+
+                            for (int i = 0; i < recetas.length; i++){
+                                System.out.println(recetas[i]);
                             }
                         break;
                         case "VP":
@@ -482,10 +480,12 @@ public class Main {
                                 rec.imprimeTags();
 
                                 int opcii;
+                                int[] codER = new int[100];
+                                int contta = 0;
                                 do{
                                     System.out.println("Introduce la posición de las etiquetas que quieres asignar a tu receta, si quieres añadir una nueva introduce (0), si quieres salir introduce (-1).");
-                                    opcii = sc.nextInt(); 
-
+                                    opcii = sc.nextInt();
+                                    
                                     String nomT = "";
                                     if(opcii == 0){
                                         do{
@@ -505,10 +505,25 @@ public class Main {
                                                 rec.crearUnion(c, codT, n1);
                                             }
                                         }while(!nomT.equals("0"));
-                                    }else if(opc == -1){
+                                    }else if(opcii != 0 && opcii > 0){
+                                        Statement st21 = c.getCon().createStatement();
+                                        String consulta23 = "select count(*) from tags where tags.id = '" + opcii + "'";
+                                        ResultSet rs23 = st21.executeQuery(consulta23);
+                                        rs23.next();
 
+                                        if(rs23.getInt(1) != 0){
+                                            codER[contta] = opcii;
+                                            contta++;
+                                        }
                                     }
+                                    
                                 }while(opcii != -1);
+                                int[] codERAux = new int[contta];
+                                
+                                for (int i = 0; i < codERAux.length; i++) {
+                                    codERAux[i] = codER[i];
+                                    rec.crearUnion(c, codERAux[i], n1);
+                                }
                             }
                             sc.nextLine();    
                         break;
@@ -522,16 +537,16 @@ public class Main {
                                 int num_recip = rs8.getInt(1);
                                 String [] recetasUsu = new String [num_recip];
 
-                                String consulta7 = "select nombreR from recipe where nameusu = '"+usu.getNameusu()+"'";
+                                String consulta7 = "select cod, nombreR from recipe where nameusu = '"+usu.getNameusu()+"'";
                                 ResultSet rs7 = st6.executeQuery(consulta7);
                                 int count = 0;
-                                while(rs7.next()){
+                                while(rs7.next()){ //ESTO HAY QUE ARREGLARLO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                                     recetasUsu[count] = rs7.getString("nombreR");
                                     count++;
                                 }
 
                                 for (int i = 0; i < recetasUsu.length; i++) {
-                                    System.out.println((i+1) +" "+ recetasUsu[i]);
+                                    System.out.println((i+1) + recetasUsu[i]);
                                 }
 
                                 System.out.println("Elige cuál quieres borrar (si no quieres borrar ninguna, pon 0)");
@@ -540,9 +555,11 @@ public class Main {
                                     opcionn -= 1;
                                     System.out.println(recetasUsu[opcionn]);
                                     String recetaB = recetasUsu[opcionn];
-                                    String borrarR = "delete from recipe where nombreR = '"+recetaB+"'";
+                                    String borrarU = "delete from uniones where cod = "+ opcionn;
                                     Statement st7 = c.getCon().createStatement();
-
+                                    ResultSet rs40 = st7.executeQuery(borrarU);
+                                    
+                                    String borrarR = "delete from recipe where nombreR = '"+recetaB+"'";
                                     ResultSet rs9 = st7.executeQuery(borrarR);
                                     System.out.println("Elminiando receta...");
                                 }
@@ -550,31 +567,31 @@ public class Main {
                         break;
                         case "MR": //Aquí está con modificar perfil, tengo que hacerlo pero con las recetas
                             if(usu.getRol() != null){
-                                Statement st = c.getCon().createStatement();
+                                Statement st50 = c.getCon().createStatement();
                                 
                                 String cambio = "";
                                 String columna = "";
                                 
                                 consulta = "select count(*) from recipe";
-                                ResultSet rs = st.executeQuery(consulta);
-                                rs.next();
-                                int n = rs.getInt(1);
+                                ResultSet rs50 = st50.executeQuery(consulta);
+                                rs50.next();
+                                int n50 = rs50.getInt(1);
 
-                                String [] recetas = new String [n];
+                                String [] recetas50 = new String [n50];
 
-                                String consulta2;
-                                consulta2 = "select * from recipe order by cod";
-                                ResultSet rs2 = st.executeQuery(consulta2);
+                                String consulta222;
+                                consulta222 = "select * from recipe order by cod";
+                                ResultSet rs51 = st50.executeQuery(consulta222);
 
                                 cont = 0;
                                 System.out.println(" ");
-                                while(rs2.next()){
-                                    recetas[cont] = rs2.getString("nombreR"); 
+                                while(rs51.next()){
+                                    recetas50[cont] = rs51.getString("nombreR"); 
                                     cont++;
                                 }
 
-                                for (int i = 0; i < recetas.length; i++){
-                                    System.out.println((i+1)+" - "+recetas[i]);
+                                for (int i = 0; i < recetas50.length; i++){
+                                    System.out.println((i+1)+" - "+recetas50[i]);
                                 }
                                 
                                 System.out.println("Indica qué receta quieres modificar");
@@ -582,7 +599,7 @@ public class Main {
                                 op -= 1;
                                 
                                 Statement st12 = c.getCon().createStatement();
-                                consulta = "select * from recipe where nombreR = '"+recetas[op]+"'";
+                                consulta = "select * from recipe where nombreR = '"+recetas50[op]+"'";
                                 ResultSet rs13 = st12.executeQuery(consulta);
                                 rs13.next();
 
@@ -659,36 +676,36 @@ public class Main {
                         break;    
                         case "BAR":
                             if(usu.getRol() != null){
-                                Statement st = c.getCon().createStatement();
+                                Statement st51 = c.getCon().createStatement();
                                 
                                 consulta = "select count(*) from recipe";
-                                ResultSet rs = st.executeQuery(consulta);
-                                rs.next();
-                                int n = rs.getInt(1);
+                                ResultSet rs52 = st51.executeQuery(consulta);
+                                rs52.next();
+                                int nn = rs52.getInt(1);
 
-                                String [] recetas = new String [n];
+                                String [] recetas51 = new String [nn];
 
-                                String consulta2;
-                                consulta2 = "select * from recipe order by cod";
-                                ResultSet rs2 = st.executeQuery(consulta2);
+                                String consulta223;
+                                consulta223 = "select * from recipe order by cod";
+                                ResultSet rs53 = st51.executeQuery(consulta223);
 
                                 cont = 0;
                                 System.out.println(" ");
-                                while(rs2.next()){
-                                    recetas[cont] = rs2.getString("nombreR"); 
+                                while(rs53.next()){
+                                    recetas51[cont] = rs53.getString("nombreR"); 
                                     cont++;
                                 }
 
-                                for (int i = 0; i < recetas.length; i++){
-                                    System.out.println((i+1)+" - "+recetas[i]);
+                                for (int i = 0; i < recetas51.length; i++){
+                                    System.out.println((i+1)+" - "+recetas51[i]);
                                 }
                                 
                                 System.out.println("Elige cuál quieres borrar (si no quieres borrar ninguna, pon 0)");
                                 int opcionn = sc.nextInt();
                                 if(opcionn != 0){
                                     opcionn -= 1;
-                                    System.out.println(recetas[opcionn]);
-                                    String recetaB = recetas[opcionn];
+                                    System.out.println(recetas51[opcionn]);
+                                    String recetaB = recetas51[opcionn];
                                     String borrarR = "delete from recipe where nombreR = '"+recetaB+"'";
                                     Statement st7 = c.getCon().createStatement();
 
