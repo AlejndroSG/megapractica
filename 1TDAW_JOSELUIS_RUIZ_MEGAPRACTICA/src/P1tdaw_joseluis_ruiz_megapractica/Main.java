@@ -225,21 +225,23 @@ public class Main {
                                         int[] codEAux = new int[contt];
                                         codEAux = copiarArray(codE, codEAux);
                                         
-                                        String consultaaa = "select count(*) from uniones where id = ";
+                                        String consultaaa = "select count(*) from recipe where cod in (";
+                                        String subconsulta = "select distinct cod from uniones where id = ";
                                         String idU = " and id = ";
                                         String consultaa = "select recipe.cod, nombreR from recipe, uniones where recipe.cod = uniones.cod and uniones.id = ";
                                         String inter = " intersect ";
-                                        String consulta24 = "";
+                                        String consulta24 = consultaaa;
                                         String consulta25 = "";
                                         
                                         for(int i = 0; i < codEAux.length; i++){
                                             if(i != contt-1){
-                                                consulta24 += consultaaa + codEAux[i] + inter;
+                                                consulta24 += subconsulta + codEAux[i] + inter;
                                             }else{
-                                                consulta24 += consultaaa + codEAux[i];
+                                                consulta24 += subconsulta + codEAux[i] + ")";
                                             }
                                         }
                                         
+                                        System.out.println("");
                                         ResultSet rs24 = st21.executeQuery(consulta24);
                                         rs24.next();
                                         
