@@ -149,7 +149,7 @@ public class Main {
                         }
                     }
                     System.out.println("Cerrar (C)");
-                    System.out.println("Elige la opcion giipollas");
+                    System.out.println("Elige la opcion correcta");
                     opcion = sc.nextLine().toUpperCase();
                     String opci;
                     int opcn;
@@ -546,23 +546,27 @@ public class Main {
                                 }
 
                                 for (int i = 0; i < recetasUsu.length; i++) {
-                                    System.out.println((i+1) + recetasUsu[i]);
+                                    System.out.println((i+1)+"- "+recetasUsu[i]);
                                 }
 
                                 System.out.println("Elige cuál quieres borrar (si no quieres borrar ninguna, pon 0)");
                                 int opcionn = sc.nextInt();
                                 if(opcionn != 0){
                                     opcionn -= 1;
+                                    consulta7 = "select cod from recipe where nombreR = '"+recetasUsu[opcionn]+"'";
+                                    ResultSet rs39 = st6.executeQuery(consulta7);
+                                    rs39.next();
                                     System.out.println(recetasUsu[opcionn]);
                                     String recetaB = recetasUsu[opcionn];
-                                    String borrarU = "delete from uniones where cod = "+ opcionn;
+                                    String borrarU = "delete from uniones where cod = "+rs39.getInt(1);
                                     Statement st7 = c.getCon().createStatement();
                                     ResultSet rs40 = st7.executeQuery(borrarU);
-                                    
-                                    String borrarR = "delete from recipe where nombreR = '"+recetaB+"'";
+
+                                    String borrarR = "delete from recipe where cod = "+rs39.getInt(1);
                                     ResultSet rs9 = st7.executeQuery(borrarR);
                                     System.out.println("Elminiando receta...");
                                 }
+                                sc.nextLine();
                             }
                         break;
                         case "MR": //Aquí está con modificar perfil, tengo que hacerlo pero con las recetas
@@ -688,8 +692,8 @@ public class Main {
                                 String consulta223;
                                 consulta223 = "select * from recipe order by cod";
                                 ResultSet rs53 = st51.executeQuery(consulta223);
-
                                 cont = 0;
+                                
                                 System.out.println(" ");
                                 while(rs53.next()){
                                     recetas51[cont] = rs53.getString("nombreR"); 
@@ -697,7 +701,7 @@ public class Main {
                                 }
 
                                 for (int i = 0; i < recetas51.length; i++){
-                                    System.out.println((i+1)+" - "+recetas51[i]);
+                                    System.out.println((i+1)+"- "+recetas51[i]);
                                 }
                                 
                                 System.out.println("Elige cuál quieres borrar (si no quieres borrar ninguna, pon 0)");
@@ -706,8 +710,15 @@ public class Main {
                                     opcionn -= 1;
                                     System.out.println(recetas51[opcionn]);
                                     String recetaB = recetas51[opcionn];
-                                    String borrarR = "delete from recipe where nombreR = '"+recetaB+"'";
+                                    consulta223 = "select cod from recipe where nombreR = '"+recetas51[opcionn]+"'";
+                                    ResultSet rs54 = st51.executeQuery(consulta223);
+                                    rs54.next();
+                                    
+                                    String borrarU = "delete from uniones where cod = "+rs54.getInt(1);
                                     Statement st7 = c.getCon().createStatement();
+                                    ResultSet rs40 = st7.executeQuery(borrarU);
+                                    
+                                    String borrarR = "delete from recipe where cod = "+rs54.getInt(1);
 
                                     ResultSet rs9 = st7.executeQuery(borrarR);
                                     System.out.println("Elminiando receta...");

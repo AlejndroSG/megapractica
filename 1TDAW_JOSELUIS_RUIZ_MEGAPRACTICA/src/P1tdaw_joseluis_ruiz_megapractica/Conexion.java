@@ -5,8 +5,10 @@ import java.sql.*;
 public class Conexion {
     //ATRIBUTOS
     private String url = "jdbc:oracle:thin:@//localhost:1521/xe";
-    private String username = "aula";
-    private String pass = "aula";
+//    private String username = "aula";
+    private String username = "usu";
+//    private String pass = "aula";
+    private String pass = "usu";
     private Connection con;
     
     //CONSTRUCTOR
