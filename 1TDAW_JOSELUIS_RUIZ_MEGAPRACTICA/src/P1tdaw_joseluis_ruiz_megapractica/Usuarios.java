@@ -9,13 +9,13 @@ public class Usuarios {
     private String rol;
     
     //Constructor
-    public Usuarios(){
+    public Usuarios(){ //Este "usuario" se crea para los usuarios que no están registrados, teniendo el rol como null
         nameusu = "";
         password = "";
         rol = null;
     }
     
-    public Usuarios(String nameusu, String password, String rol) {
+    public Usuarios(String nameusu, String password, String rol) { //Usuarios registrados y admin
         this.nameusu = nameusu;
         this.password = password;
         this.rol = rol;
@@ -45,7 +45,4 @@ public class Usuarios {
     public void setRol(String rol) {
         this.rol = rol;
     }
-    
-    //Metodos
-    
 }

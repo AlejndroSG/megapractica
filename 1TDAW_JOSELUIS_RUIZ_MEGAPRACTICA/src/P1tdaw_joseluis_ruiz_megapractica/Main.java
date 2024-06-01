@@ -101,29 +101,6 @@ public class Main {
                 System.out.println("No has iniciado sesión, por lo que no tendrás acceso total al programa");
             }
         }
-        /*Statement st2 = c.getCon().createStatement();
-        String consulta3;
-        consulta3 = "select count(*) from usuarioR";
-        ResultSet rs2 = st2.executeQuery(consulta3);
-        rs2.next();
-        int n = rs2.getInt(1);
-        
-        String [] usuarios = new String [n];
-
-        String consulta2;
-        consulta2 = "select * from usuarioR";
-        ResultSet rs = st2.executeQuery(consulta2);
-
-        int cont = 0;
-
-        while(rs.next()){
-            usuarios[cont] = rs.getString("nameusu");
-            cont++;
-        }
-        
-        for (int i = 0; i < usuarios.length; i++) {
-            System.out.println(usuarios[i]);
-        }*/
         String consulta;
         int cont;
         Recetas r = new Recetas();
@@ -587,84 +564,83 @@ public class Main {
                             }
                             sc.nextLine();    
                         break;
-                        case "BM":
-                            if(usu.getRol() != null){
+                        case "BM":  //Borrar mis recetas
+                            if(usu.getRol() != null){ //Volvemos a comprobar que el usuario esté registrado
                                 Statement st6 = c.getCon().createStatement();
-                                System.out.println("Tus recetas son: ");
-                                String consulta8 = "select count(*) from recipe where nameusu = '"+usu.getNameusu()+"'";
-                                ResultSet rs8 = st6.executeQuery(consulta8);
+                                System.out.println("Tus recetas son: "); //Le voy a imrpimir todas las recetas que tienen su nombre de usuario
+                                String consulta8 = "select count(*) from recipe where nameusu = '"+usu.getNameusu()+"'"; //Me guardo el numero que tiene para crear un array
+                                ResultSet rs8 = st6.executeQuery(consulta8); 
                                 rs8.next();
                                 int num_recip = rs8.getInt(1);
-                                String [] recetasUsu = new String [num_recip];
+                                String [] recetasUsu = new String [num_recip]; //Me creo array con el numero de recetas que tiene
 
                                 String consulta7 = "select cod, nombreR from recipe where nameusu = '"+usu.getNameusu()+"'";
                                 ResultSet rs7 = st6.executeQuery(consulta7);
                                 int count = 0;
-                                while(rs7.next()){ //ESTO HAY QUE ARREGLARLO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                    recetasUsu[count] = rs7.getString("nombreR");
+                                while(rs7.next()){
+                                    recetasUsu[count] = rs7.getString("nombreR"); //Guardo las recetas con la consulta en el array
                                     count++;
                                 }
 
                                 for (int i = 0; i < recetasUsu.length; i++) {
-                                    System.out.println((i+1)+"- "+recetasUsu[i]);
+                                    System.out.println((i+1)+"- "+recetasUsu[i]); //Le imprimimos la receta
                                 }
 
                                 System.out.println("Elige cuál quieres borrar (si no quieres borrar ninguna, pon 0)");
-                                int opcionn = sc.nextInt();
+                                int opcionn = sc.nextInt(); //Le hacemos elegir al usuario qué receta quiere borrar mediante la posicion
                                 if(opcionn != 0){
                                     opcionn -= 1;
-                                    consulta7 = "select cod from recipe where nombreR = '"+recetasUsu[opcionn]+"'";
+                                    consulta7 = "select cod from recipe where nombreR = '"+recetasUsu[opcionn]+"'"; //Guardamos el codigo que tiene esa receta
                                     ResultSet rs39 = st6.executeQuery(consulta7);
                                     rs39.next();
                                     System.out.println(recetasUsu[opcionn]);
-                                    String recetaB = recetasUsu[opcionn];
-                                    String borrarU = "delete from uniones where cod = "+rs39.getInt(1);
+                                    String borrarU = "delete from uniones where cod = "+rs39.getInt(1); //Borramos en base al codigo obtenido primero de uniones para que no de error de constraint
                                     Statement st7 = c.getCon().createStatement();
-                                    ResultSet rs40 = st7.executeQuery(borrarU);
+                                    st7.executeUpdate(borrarU); //Ejecutamos el borrar directamente con update y no queremos devolver nada
 
-                                    String borrarR = "delete from recipe where cod = "+rs39.getInt(1);
+                                    String borrarR = "delete from recipe where cod = "+rs39.getInt(1); //Ahora si borramos directamente de recetas
                                     ResultSet rs9 = st7.executeQuery(borrarR);
                                     System.out.println("Elminiando receta...");
                                 }
                                 sc.nextLine();
                             }
                         break;
-                        case "MR": //Aquí está con modificar perfil, tengo que hacerlo pero con las recetas
+                        case "MR": //Modificar receta 
                             if(usu.getRol() != null){
                                 Statement st50 = c.getCon().createStatement();
                                 
                                 String cambio = "";
                                 String columna = "";
                                 
-                                consulta = "select count(*) from recipe";
+                                consulta = "select count(*) from recipe"; //Almacenamos el número de recetas totales
                                 ResultSet rs50 = st50.executeQuery(consulta);
                                 rs50.next();
                                 int n50 = rs50.getInt(1);
 
-                                String [] recetas50 = new String [n50];
+                                String [] recetas50 = new String [n50]; //Greamos un array con ese numero de recetas
 
                                 String consulta222;
-                                consulta222 = "select * from recipe order by cod";
+                                consulta222 = "select * from recipe order by cod"; //Seleccionamos todas las recetas ordenadas por codigo
                                 ResultSet rs51 = st50.executeQuery(consulta222);
 
                                 cont = 0;
                                 System.out.println(" ");
                                 while(rs51.next()){
-                                    recetas50[cont] = rs51.getString("nombreR"); 
+                                    recetas50[cont] = rs51.getString("nombreR");  //Nos guardamos el nombre de cada una de las recetas en el array
                                     cont++;
                                 }
 
                                 for (int i = 0; i < recetas50.length; i++){
-                                    System.out.println((i+1)+" - "+recetas50[i]);
+                                    System.out.println((i+1)+" - "+recetas50[i]); //Se las imprimimos todas al admin
                                 }
                                 
                                 System.out.println("Indica qué receta quieres modificar");
-                                int op = sc.nextInt();
+                                int op = sc.nextInt(); //Nos da la opcion que quiere modificar según su posición en el array
                                 op -= 1;
                                 
                                 Statement st12 = c.getCon().createStatement();
                                 consulta = "select * from recipe where nombreR = '"+recetas50[op]+"'";
-                                ResultSet rs13 = st12.executeQuery(consulta);
+                                ResultSet rs13 = st12.executeQuery(consulta); //Seleccionamos todos los datos de la receta que quiere modificar
                                 rs13.next();
 
                                 System.out.println("Nombre de la receta: "+rs13.getString(2));
@@ -674,14 +650,14 @@ public class Main {
                                 System.out.println("Ingredientes: "+rs13.getString(6));
                                 System.out.println("Instrucciones: "+rs13.getString(7));
                                 
-                                sc.nextLine();
+                                sc.nextLine(); //Imprimimos todos los datos para preguntarle qué quiere modificar
                                 System.out.println("Introduce qué característica quiéres modificar (nombre receta, nombre usuario, puntuacion, descripcion, ingredientes, instrucciones)");
                                 String opp = sc.nextLine();
                                 
-                                if(opp.equals("nombre receta")){
+                                if(opp.equals("nombre receta")){ //Comprobamos que quiere cambiar y directamente lo hacemos 
                                     System.out.println("Introduce el nuevo nombre de receta");
                                     cambio = sc.nextLine();
-                                    columna = rs13.getMetaData().getColumnName(2).toLowerCase();
+                                    columna = rs13.getMetaData().getColumnName(2).toLowerCase(); //Nos guardamos el nombre de la columna para poder usar un update en cualquiera de los casos
                                 }
                                 if(opp.equals("nombre usuario")){
                                     System.out.println("Introduce el nuevo nombre de usuario");
@@ -709,99 +685,97 @@ public class Main {
                                     columna = rs13.getMetaData().getColumnName(7).toLowerCase();
                                 }
 
-                                String consulta6 = "update recipe set "+columna+" = '"+cambio+"' where cod = '"+rs13.getInt(1)+"'";
+                                String consulta6 = "update recipe set "+columna+" = '"+cambio+"' where cod = '"+rs13.getInt(1)+"'"; //Directamente podemos hacerlo al obtener el nombre de la columna que quiere cambiar
                                 if(st12.executeUpdate(consulta6)!=0)
                                     System.out.println("Modificación correcta");
                             }
                         break;
-                        case "USUR":
+                        case "USUR": //Le mostramos al admin todos los usuarios del sistema
                             Statement st30 = c.getCon().createStatement();
-                            String coonsuultaa = "select count(*) from usuarioR";
+                            String coonsuultaa = "select count(*) from usuarioR"; //Seleccionamos el numero de usuarios que hay 
                             ResultSet rs30 = st30.executeQuery(coonsuultaa);
                             rs30.next();
                             int nummm = rs30.getInt(1);
                             
-                            String [] usuariosT = new String[nummm];
+                            String [] usuariosT = new String[nummm]; //Array con el numero de posiciones de los usuarios
                             
-                            String consuulta = "select nombre, apellidos, email, nameusu, rol from usuarioR";
+                            String consuulta = "select nombre, apellidos, email, nameusu, rol from usuarioR"; //Seleccionamos todo menos la contraseña
                             ResultSet rs31 = st30.executeQuery(consuulta);
                             
                             int conttt = 0;
-                            while(rs31.next()){
+                            while(rs31.next()){ //Nos almacenamos cada uno de ellos en la posición del array correspondiente
                                 usuariosT[conttt] = "Nombre: "+rs31.getString(1)+" || Apellidos: "+rs31.getString(2)+" || Email: "+rs31.getString(3)+" || Nombre Usuario: "+rs31.getString(4)+" || Rol: "+rs31.getString(5);
                                 conttt++;
                             }
                             System.out.println(" ");
                             System.out.println("Todos los usuarios del sistema son: ");
                             for (int i = 0; i < usuariosT.length; i++) {
-                                System.out.println(usuariosT[i]);
+                                System.out.println(usuariosT[i]); //Le imprimimos todos los usuarios del sistema
                             }
                             
                         break;    
-                        case "BAR":
+                        case "BAR": //Borrar Alguna Receta
                             if(usu.getRol() != null){
                                 Statement st51 = c.getCon().createStatement();
                                 
-                                consulta = "select count(*) from recipe";
+                                consulta = "select count(*) from recipe"; //Seleccionamos el numero de recetas totales
                                 ResultSet rs52 = st51.executeQuery(consulta);
                                 rs52.next();
                                 int nn = rs52.getInt(1);
 
-                                String [] recetas51 = new String [nn];
+                                String [] recetas51 = new String [nn]; //Creamos un array con todas las recetas que hay disponibles
 
                                 String consulta223;
-                                consulta223 = "select * from recipe order by cod";
+                                consulta223 = "select * from recipe order by cod"; //Seleccionamos todas las recetas
                                 ResultSet rs53 = st51.executeQuery(consulta223);
                                 cont = 0;
                                 
                                 System.out.println(" ");
                                 while(rs53.next()){
-                                    recetas51[cont] = rs53.getString("nombreR"); 
+                                    recetas51[cont] = rs53.getString("nombreR");  //Guardamos el nombre de la receta 
                                     cont++;
                                 }
 
                                 for (int i = 0; i < recetas51.length; i++){
-                                    System.out.println((i+1)+"- "+recetas51[i]);
+                                    System.out.println((i+1)+"- "+recetas51[i]); //Imprimimos todas las recetas en el sistema
                                 }
                                 
                                 System.out.println("Elige cuál quieres borrar (si no quieres borrar ninguna, pon 0)");
-                                int opcionn = sc.nextInt();
+                                int opcionn = sc.nextInt(); //Elige cuál quiere borrar según su posición en el array
                                 if(opcionn != 0){
                                     opcionn -= 1;
                                     System.out.println(recetas51[opcionn]);
-                                    String recetaB = recetas51[opcionn];
-                                    consulta223 = "select cod from recipe where nombreR = '"+recetas51[opcionn]+"'";
+                                    consulta223 = "select cod from recipe where nombreR = '"+recetas51[opcionn]+"'"; //Seleccionamos el codigo de la receta que vamos a eliminar
                                     ResultSet rs54 = st51.executeQuery(consulta223);
                                     rs54.next();
                                     
-                                    String borrarU = "delete from uniones where cod = "+rs54.getInt(1);
+                                    String borrarU = "delete from uniones where cod = "+rs54.getInt(1); //Realizamos la consulta para borrar la receta de uniones y asi evitar errores de constraint
                                     Statement st7 = c.getCon().createStatement();
-                                    ResultSet rs40 = st7.executeQuery(borrarU);
+                                    st7.executeUpdate(borrarU);
                                     
-                                    String borrarR = "delete from recipe where cod = "+rs54.getInt(1);
+                                    String borrarR = "delete from recipe where cod = "+rs54.getInt(1); //Realizamos la consulta para ahora si borrarla de recetas
 
-                                    ResultSet rs9 = st7.executeQuery(borrarR);
+                                    st7.executeUpdate(borrarR);
                                     System.out.println("Elminiando receta...");
                                 }
                             }
                             sc.nextLine();
                         break;
-                        case "C":
+                        case "C": //Cerrar
                             System.out.println("Saliendo de la app...");
-                            num = 2;
+                            num = 2; //Ponemos numero a 2 para que salga del do while
                         break;
                         }
                     }while (!opcion.equals("C"));
                     break;   
                 }
             }while(num != 2);
-            c.cierre();
+            c.cierre(); //Cerramos la conexion con el sistema o SQL
         }
-        public static int[] copiarArray(int[] codE, int[] codEAux) throws ClassNotFoundException, SQLException{     
-        for(int i = 0; i < codEAux.length; i++){
-            codEAux[i] = codE[i];
+        public static int[] copiarArray(int[] codE, int[] codEAux) throws ClassNotFoundException, SQLException{ //Método para crear un array auxiliar directamente
+            for(int i = 0; i < codEAux.length; i++){
+                codEAux[i] = codE[i];
+            }
+            return codEAux;
         }
-        
-        return codEAux;
-    }
 }

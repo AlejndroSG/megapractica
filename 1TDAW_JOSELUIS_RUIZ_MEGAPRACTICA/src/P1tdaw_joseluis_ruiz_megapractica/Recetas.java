@@ -59,29 +59,29 @@ public class Recetas extends Usuarios{
     }
     
     //MÉTODOS
-    public void imprimeTags() throws ClassNotFoundException, SQLException{
+    public void imprimeTags() throws ClassNotFoundException, SQLException{ //Método que imprime todas las etiquetas disponibles para cada receta
         Scanner sc = new Scanner (System.in);
         Conexion c = new Conexion();
         Statement st = c.getCon().createStatement();
         
-        String consulta = "select count(*) from tags";
+        String consulta = "select count(*) from tags"; //Seleccionamos cuantas etiquetas hay
         ResultSet rs = st.executeQuery(consulta);
         rs.next();
         int n = rs.getInt(1);
-        String consulta1 = "select nom from tags order by id";
+        String consulta1 = "select nom from tags order by id"; //Seleccionamos el nombre de las etiquetas ordenado por el id
         ResultSet rs2 = st.executeQuery(consulta1);
         rs2.next();
         
-        String[] tags = new String[n];
+        String[] tags = new String[n]; //Nos creamos el array con el numero de posiciones de las etiquetas que hay totales
         for (int i = 0; i < n; i++) {
-            tags[i] = rs2.getString("nom");
+            tags[i] = rs2.getString("nom"); //Almacenamos el nombre de la etiqueta y se la imprimimos
             System.out.println((i+1) + " " + tags[i]);
             rs2.next();
         }
     }
     
-    public void crearUnion(Conexion c, int codT, int codR) throws ClassNotFoundException, SQLException{
+    public void crearUnion(Conexion c, int codT, int codR) throws ClassNotFoundException, SQLException{ //Creamos la union de la etiqueta con la propia receta que elija el usuario
         String consulta = "insert into uniones values ("+ codT + ", " + codR + ")";
-        c.insert(consulta);
+        c.insert(consulta); //Realizamos el insert
     }
 }
